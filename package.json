@@ -1,0 +1,19 @@
+{
+  "name": "user-api-no-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules/.bin/nodemon --harmony -e js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.1"
+  }
+}
