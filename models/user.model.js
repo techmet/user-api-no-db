@@ -18,19 +18,24 @@ function getUsers() {
 function getUser(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(users, id)
-        .then(user => resolve(user))
-        .catch(err => reject(err))
+            .then(user => resolve(user))
+            .catch(err => reject(err))
     })
 }
 
 function insertUser(newUser) {
     return new Promise((resolve, reject) => {
-        const id = { id: helper.getNewId(users) }
-        const date = { 
+        const id = {
+            id: helper.getNewId(users)
+        }
+        const date = {
             createdAt: helper.newDate(),
             updatedAt: helper.newDate()
-        } 
-        newUser = { ...id, ...date, ...newUser }
+        }
+        newUser = { ...date,
+            ...newUser,
+            ...id
+        }
         users.push(newUser)
         helper.writeJSONFile(filename, users)
         resolve(newUser)
@@ -40,37 +45,42 @@ function insertUser(newUser) {
 function updateUser(id, newUser) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(users, id)
-        .then(user => {
-            const index = users.findIndex(p => p.id == user.id)
-            id = { id: user.id }
-            const date = {
-                createdAt: user.createdAt,
-                updatedAt: helper.newDate()
-            } 
-            users[index] = { ...id, ...date, ...newUser }
-            helper.writeJSONFile(filename, users)
-            resolve(users[index])
-        })
-        .catch(err => reject(err))
+            .then(user => {
+                const index = users.findIndex(p => p.id == user.id)
+                id = {
+                    id: user.id
+                }
+                const date = {
+                    createdAt: user.createdAt,
+                    updatedAt: helper.newDate()
+                }
+                users[index] = { ...newUser,
+                    ...id,
+                    ...date
+                }
+                helper.writeJSONFile(filename, users)
+                resolve(users[index])
+            })
+            .catch(err => reject(err))
     })
 }
 
 function deleteUser(id) {
     return new Promise((resolve, reject) => {
         helper.mustBeInArray(users, id)
-        .then(() => {
-            users = users.filter(p => p.id !== id)
-            helper.writeJSONFile(filename, users)
-            resolve()
-        })
-        .catch(err => reject(err))
+            .then(() => {
+                users = users.filter(p => p.id !== +id)
+                helper.writeJSONFile(filename, users)
+                resolve()
+            })
+            .catch(err => reject(err))
     })
 }
 
 module.exports = {
     insertUser,
     getUsers,
-    getUser, 
+    getUser,
     updateUser,
     deleteUser
 }
